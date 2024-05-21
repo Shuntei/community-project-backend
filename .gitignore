@@ -1,8 +1,8 @@
 node_modules
 
 # dev.env
-production.env
-package-lock.json
+# production.env
+# package-lock.json
 
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
@@ -13,7 +13,7 @@ package-lock.json
 /.pnp
 .pnp.js
 .yarn/install-state.gz
-package-lock.json 
+# package-lock.json 
 /.vscode/
 /utils/linda/mysql2-connect.js
 
