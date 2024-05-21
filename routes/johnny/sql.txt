@@ -1,0 +1,42 @@
+
+抓留言資料
+SELECT comment_id, sn_posts.post_id FROM `sn_comments` LEFT JOIN sn_posts USING(post_id) WHERE post_id=35
+
+新增留言
+"INSERT INTO `sn_comments` ( `content`, `post_id`) VALUES ( ?, ? )";
+
+發文顯示,加入留言統計前(修改前)sql
+const totalPostsSql = ` SELECT * FROM sn_posts ${where}
+ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`
+
+發文顯示,加入留言統計後(修改後)sql
+const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count FROM  sn_posts p 
+LEFT JOIN ( SELECT post_id, 
+COUNT(comment_id) AS comment_count 
+FROM  sn_comments 
+GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id
+ORDER BY  p.post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
+[totalPostsRows] = await db.query(totalPostsSql);
+
+
+   $sql = "SELECT * FROM sn_posts WHERE board_id = :board_id ORDER BY posts_timestamp DESC";
+
+    if (!$startDate && !$endDate && !$inputSearch) {
+        $sql = sprintf("SELECT * FROM sn_posts ORDER BY posts_timestamp $newOrder 
+        LIMIT %s, %s", ($page - 1) * $perPage, $perPage);
+    } else {
+        if ($inputSearch && !$startDate && !$endDate) {
+            $sql = "SELECT * FROM sn_posts WHERE $selectedOption LIKE '%$inputSearch%'
+            ORDER BY posts_timestamp $newOrder LIMIT " . (($page - 1) * $perPage) . ", $perPage";
+        } else {
+            if ($startDate && !$endDate) {
+                $sql = "SELECT * FROM sn_posts WHERE $selectedOption LIKE '%$inputSearch%'
+                AND (posts_timestamp BETWEEN '$startDate' AND '$startDate 23:59:59')
+                ORDER BY posts_timestamp $newOrder LIMIT " . (($page - 1) * $perPage) . ", $perPage";
+            } else {
+                $sql = "SELECT * FROM sn_posts WHERE $selectedOption LIKE '%$inputSearch%'
+                AND (posts_timestamp BETWEEN '$startDate' AND '$endDate 23:59:59')
+                ORDER BY posts_timestamp $newOrder LIMIT " . (($page - 1) * $perPage) . ", $perPage";
+            }
+        }
+    }
